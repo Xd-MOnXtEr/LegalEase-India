@@ -1,0 +1,258 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 210 40% 98%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 221 83% 53%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221 83% 53%;
+
+    --radius: 0.5rem;
+    
+    /* Justice theme colors */
+    --justice-50: 216 33% 97%;
+    --justice-100: 214 32% 91%;
+    --justice-200: 212 33% 89%;
+    --justice-300: 211 33% 83%;
+    --justice-400: 211 33% 69%;
+    --justice-500: 212 64% 39%;
+    --justice-600: 212 72% 31%;
+    --justice-700: 213 71% 23%;
+    --justice-800: 214 56% 15%;
+    --justice-900: 216 48% 8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 91.2% 59.8%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+    
+    /* Justice theme dark colors */
+    --justice-50: 214 20% 15%;
+    --justice-100: 213 19% 22%;
+    --justice-200: 213 19% 32%;
+    --justice-300: 212 18% 42%;
+    --justice-400: 212 18% 52%;
+    --justice-500: 212 64% 60%;
+    --justice-600: 211 90% 68%;
+    --justice-700: 210 90% 75%;
+    --justice-800: 209 92% 85%;
+    --justice-900: 210 40% 98%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white bg-opacity-70 backdrop-blur-md border border-gray-200 shadow-sm rounded-lg;
+  }
+  
+  .button-transition {
+    @apply transition-all duration-200 ease-in-out;
+  }
+  
+  /* Justice theme components */
+  .justice-card {
+    @apply bg-white border border-justice-200 shadow-sm rounded-lg hover:shadow-md transition-shadow;
+  }
+  
+  .justice-input {
+    @apply border border-justice-300 rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-justice-500 focus:border-transparent;
+  }
+  
+  .justice-button {
+    @apply bg-justice-600 text-white rounded-md px-4 py-2 hover:bg-justice-700 transition-colors focus:outline-none focus:ring-2 focus:ring-justice-500 focus:ring-offset-2;
+  }
+  
+  .justice-button-outline {
+    @apply border border-justice-600 text-justice-600 rounded-md px-4 py-2 hover:bg-justice-50 transition-colors focus:outline-none focus:ring-2 focus:ring-justice-500 focus:ring-offset-2;
+  }
+}
+
+.font-sans {
+  font-family: 'Inter', sans-serif;
+}
+
+.font-serif {
+  font-family: 'Playfair Display', serif;
+}
+
+/* Justice theme text colors */
+.text-justice-50 { color: hsl(var(--justice-50)); }
+.text-justice-100 { color: hsl(var(--justice-100)); }
+.text-justice-200 { color: hsl(var(--justice-200)); }
+.text-justice-300 { color: hsl(var(--justice-300)); }
+.text-justice-400 { color: hsl(var(--justice-400)); }
+.text-justice-500 { color: hsl(var(--justice-500)); }
+.text-justice-600 { color: hsl(var(--justice-600)); }
+.text-justice-700 { color: hsl(var(--justice-700)); }
+.text-justice-800 { color: hsl(var(--justice-800)); }
+.text-justice-900 { color: hsl(var(--justice-900)); }
+
+/* Justice theme background colors */
+.bg-justice-50 { background-color: hsl(var(--justice-50)); }
+.bg-justice-100 { background-color: hsl(var(--justice-100)); }
+.bg-justice-200 { background-color: hsl(var(--justice-200)); }
+.bg-justice-300 { background-color: hsl(var(--justice-300)); }
+.bg-justice-400 { background-color: hsl(var(--justice-400)); }
+.bg-justice-500 { background-color: hsl(var(--justice-500)); }
+.bg-justice-600 { background-color: hsl(var(--justice-600)); }
+.bg-justice-700 { background-color: hsl(var(--justice-700)); }
+.bg-justice-800 { background-color: hsl(var(--justice-800)); }
+.bg-justice-900 { background-color: hsl(var(--justice-900)); }
+
+/* Justice theme border colors */
+.border-justice-50 { border-color: hsl(var(--justice-50)); }
+.border-justice-100 { border-color: hsl(var(--justice-100)); }
+.border-justice-200 { border-color: hsl(var(--justice-200)); }
+.border-justice-300 { border-color: hsl(var(--justice-300)); }
+.border-justice-400 { border-color: hsl(var(--justice-400)); }
+.border-justice-500 { border-color: hsl(var(--justice-500)); }
+.border-justice-600 { border-color: hsl(var(--justice-600)); }
+.border-justice-700 { border-color: hsl(var(--justice-700)); }
+.border-justice-800 { border-color: hsl(var(--justice-800)); }
+.border-justice-900 { border-color: hsl(var(--justice-900)); }
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Animation classes */
+.slide-in-left {
+  animation: slideInLeft 0.5s ease-out forwards;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.5s ease-out forwards;
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Page transitions */
+.page-transition-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+
+.page-transition-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-transition-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-transition-exit-active {
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: opacity 300ms, transform 300ms;
+}
