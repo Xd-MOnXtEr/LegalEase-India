@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Send, Bot, User, RefreshCw } from 'lucide-react';
+import { Send, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
 import { toast } from 'sonner';
 import generateResponse from './NLPResponseGenerator';
+import ChatMessage from './ChatMessage';
+import TypingIndicator from './TypingIndicator';
 
 const legalKnowledgeBase = {
   "fundamental rights": "Under the Indian Constitution, fundamental rights include Right to Equality (Articles 14-18), Right to Freedom (Articles 19-22), Right against Exploitation (Articles 23-24), Right to Freedom of Religion (Articles 25-28), Cultural and Educational Rights (Articles 29-30), and Right to Constitutional Remedies (Article 32).",
@@ -75,7 +76,7 @@ const ChatInterface = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!input.trim()) return;
     
     // Add user message
@@ -86,28 +87,27 @@ const ChatInterface = () => {
     setInput('');
     setIsLoading(true);
     
-    // Process the query with Gemini API
-    generateResponse(input, legalKnowledgeBase)
-      .then((response) => {
-        const botMessage = { content: response, sender: 'bot' as const };
-        setMessages(prev => [...prev, botMessage]);
-      })
-      .catch((error) => {
-        console.error("Error generating response:", error);
-        const botMessage = { 
-          content: "I'm sorry, I encountered an error while processing your question. Please try again later.", 
-          sender: 'bot' as const 
-        };
-        setMessages(prev => [...prev, botMessage]);
-        toast.error("Error generating response");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    try {
+      // Process the query with Gemini API
+      const response = await generateResponse(input, legalKnowledgeBase);
+      const botMessage = { content: response, sender: 'bot' as const };
+      setMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error("Error generating response:", error);
+      const errorMessage = { 
+        content: "I'm sorry, I encountered an error while processing your question. Please try again later.", 
+        sender: 'bot' as const 
+      };
+      setMessages(prev => [...prev, errorMessage]);
+      toast.error("Error generating response");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleSendMessage();
     }
   };
@@ -126,7 +126,6 @@ const ChatInterface = () => {
     <Card className="w-full border border-justice-200 shadow-sm overflow-hidden">
       <div className="bg-justice-600 text-white p-4 flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <Bot className="h-5 w-5" />
           <h3 className="font-medium">LegalEase AI Assistant</h3>
         </div>
         <Button 
@@ -143,52 +142,15 @@ const ChatInterface = () => {
       <CardContent className="p-0">
         <div className="h-[500px] overflow-y-auto p-4 bg-gray-50">
           {messages.map((message, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
-              className={`flex mb-4 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
-              <div className={`flex gap-2 max-w-[80%] ${message.sender === 'user' ? 'flex-row-reverse' : ''}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  message.sender === 'user' ? 'bg-blue-100 text-blue-600' : 'bg-justice-100 text-justice-600'
-                }`}>
-                  {message.sender === 'user' ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
-                </div>
-                <div className={`p-3 rounded-lg ${
-                  message.sender === 'user' 
-                    ? 'bg-justice-600 text-white rounded-tr-none' 
-                    : 'bg-white border border-gray-200 rounded-tl-none'
-                }`}>
-                  {message.content.split('\n').map((text, i) => (
-                    <p key={i} className={i > 0 ? "mt-2" : ""}>{text}</p>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+            <ChatMessage 
+              key={index} 
+              content={message.content} 
+              sender={message.sender} 
+              index={index} 
+            />
           ))}
           
-          {isLoading && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex justify-start mb-4"
-            >
-              <div className="flex gap-2 max-w-[80%]">
-                <div className="w-8 h-8 rounded-full bg-justice-100 text-justice-600 flex items-center justify-center flex-shrink-0">
-                  <Bot className="h-4 w-4" />
-                </div>
-                <div className="p-3 rounded-lg bg-white border border-gray-200 rounded-tl-none">
-                  <div className="flex space-x-2 items-center">
-                    <div className="h-2 w-2 bg-justice-300 rounded-full animate-bounce"></div>
-                    <div className="h-2 w-2 bg-justice-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-                    <div className="h-2 w-2 bg-justice-500 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          )}
+          {isLoading && <TypingIndicator />}
         </div>
         
         <div className="p-4 border-t border-gray-200 flex gap-2">

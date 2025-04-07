@@ -7,15 +7,37 @@ interface GeminiResponse {
     content: {
       parts: { text: string }[];
     };
+    finishReason?: string;
   }[];
   promptFeedback?: {
     blockReason?: string;
+    safetyRatings?: {
+      category: string;
+      probability: string;
+    }[];
   };
 }
 
+/**
+ * Generates a response for legal queries using the Gemini API
+ * 
+ * @param query The legal query to process
+ * @returns A string containing the legal information response
+ */
 export const generateLegalResponse = async (query: string): Promise<string> => {
   try {
-    const prompt = `You are a legal assistant specializing in Indian law. Provide accurate and helpful information based on the following query. If you don't know the answer, be honest about it. Keep responses concise and focused on Indian legal context. Query: ${query}`;
+    // Create a specialized prompt for Indian legal context
+    const prompt = `
+    You are a knowledgeable legal assistant specializing in Indian law. Provide accurate, helpful, and concise information based on the following query. 
+    
+    - Focus specifically on Indian legal context and statutes
+    - If you're unsure about a specific detail, acknowledge the limitation
+    - Provide clear, practical information when possible
+    - Keep responses focused and under 150 words
+    - Don't fabricate legal provisions
+    
+    Query: ${query}
+    `;
 
     const requestBody = {
       contents: [
@@ -49,6 +71,7 @@ export const generateLegalResponse = async (query: string): Promise<string> => {
       ]
     };
 
+    console.log("Sending request to Gemini API");
     const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -57,28 +80,38 @@ export const generateLegalResponse = async (query: string): Promise<string> => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error("Error response from Gemini API:", response.status, response.statusText, errorText);
+      console.error(`Error response from Gemini API (${response.status}): ${errorText}`);
       throw new Error(`API responded with status: ${response.status}`);
     }
 
     const data = await response.json() as GeminiResponse;
+    console.log("Received response from Gemini API");
     
+    // Check for content blocks
     if (data.promptFeedback?.blockReason) {
-      console.error("Content blocked:", data.promptFeedback.blockReason);
+      console.error("Content blocked by Gemini API:", data.promptFeedback.blockReason);
       return "I'm sorry, but I can't provide information on that topic. Please ask something else related to Indian law.";
     }
 
+    // Validate response structure
     if (!data.candidates || data.candidates.length === 0) {
-      console.error("No candidates in response:", data);
+      console.error("No candidates in Gemini response:", data);
       throw new Error("No response candidates received");
     }
 
-    if (!data.candidates[0].content?.parts || data.candidates[0].content.parts.length === 0) {
-      console.error("No content parts in response:", data);
+    const candidate = data.candidates[0];
+    
+    // Check for finish reason
+    if (candidate.finishReason && candidate.finishReason !== "STOP") {
+      console.warn(`Response generation finished with reason: ${candidate.finishReason}`);
+    }
+
+    if (!candidate.content?.parts || candidate.content.parts.length === 0) {
+      console.error("No content parts in Gemini response:", data);
       throw new Error("Invalid response structure");
     }
 
-    return data.candidates[0].content.parts[0].text;
+    return candidate.content.parts[0].text.trim();
     
   } catch (error) {
     console.error("Error with Gemini API:", error);

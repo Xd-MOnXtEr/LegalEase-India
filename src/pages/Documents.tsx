@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -20,17 +19,9 @@ import {
   Gavel,
   Users
 } from 'lucide-react';
-import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-
-interface Document {
-  id: string;
-  title: string;
-  category: string;
-  description: string;
-  languages: string[];
-  featured?: boolean;
-}
+import { Helmet } from 'react-helmet';
+import { Document, downloadDocument } from '@/utils/documentUtils';
 
 const Documents = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -147,12 +138,16 @@ const Documents = () => {
   const featuredDocuments = documents.filter(doc => doc.featured);
   
   const handleDownload = (documentId: string, documentTitle: string) => {
-    // This would be replaced with actual document download logic
-    toast.success(`Downloading ${documentTitle}`);
+    downloadDocument(documentId, documentTitle);
   };
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Helmet>
+        <title>Legal Document Templates | LegalEase India</title>
+        <meta name="description" content="Access and download free legal document templates in multiple Indian languages." />
+      </Helmet>
+
       <Header />
       
       <main className="flex-grow">
