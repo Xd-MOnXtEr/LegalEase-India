@@ -1,10 +1,16 @@
 
 import { ArrowLeft } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 const BackButton = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Don't show back button on homepage
+  if (location.pathname === '/') {
+    return null;
+  }
 
   const goBack = () => {
     navigate(-1);
