@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
@@ -37,9 +36,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from 'sonner';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import BackButton from '@/components/layout/BackButton';
 import { Lawyer, getLawyers, bookAppointment } from '@/utils/lawyerUtils';
 
-// Schema for the appointment form
 const appointmentFormSchema = z.object({
   clientName: z.string().min(3, "Name must be at least 3 characters"),
   clientEmail: z.string().email("Please enter a valid email"),
@@ -50,7 +49,6 @@ const appointmentFormSchema = z.object({
 
 type AppointmentFormValues = z.infer<typeof appointmentFormSchema>;
 
-// Available specializations
 const SPECIALIZATIONS = [
   "All Specializations",
   "Family Law",
@@ -61,7 +59,6 @@ const SPECIALIZATIONS = [
   "Corporate Law"
 ];
 
-// Available locations
 const LOCATIONS = [
   "All Locations",
   "Delhi", 
@@ -92,18 +89,15 @@ const Lawyers = () => {
     },
   });
   
-  // Load lawyers
   useEffect(() => {
     const lawyerData = getLawyers();
     setLawyers(lawyerData);
     setFilteredLawyers(lawyerData);
   }, []);
   
-  // Filter lawyers based on search and filters
   useEffect(() => {
     let results = lawyers;
     
-    // Apply text search
     if (searchTerm) {
       results = results.filter(lawyer => 
         lawyer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -112,12 +106,10 @@ const Lawyers = () => {
       );
     }
     
-    // Apply specialization filter
     if (specialization !== 'All Specializations') {
       results = results.filter(lawyer => lawyer.specialization === specialization);
     }
     
-    // Apply location filter
     if (location !== 'All Locations') {
       results = results.filter(lawyer => lawyer.location === location);
     }
@@ -125,18 +117,15 @@ const Lawyers = () => {
     setFilteredLawyers(results);
   }, [searchTerm, specialization, location, lawyers]);
   
-  // Handle booking appointment
   const handleBookAppointment = (lawyer: Lawyer) => {
     setSelectedLawyer(lawyer);
     setIsBookingOpen(true);
     
-    // Check if lawyer is registered
     if (!lawyer.isRegistered) {
       toast.warning("This lawyer hasn't completed registration. Appointment booking may be limited.");
     }
   };
   
-  // Submit appointment booking
   const submitAppointment = (data: AppointmentFormValues) => {
     if (!selectedLawyer) {
       return;
@@ -173,6 +162,8 @@ const Lawyers = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
+            <BackButton />
+            
             <div className="mb-12 text-center">
               <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Find Pro-Bono Lawyers</h1>
               <p className="text-lg text-gray-600 max-w-3xl mx-auto">
@@ -181,7 +172,6 @@ const Lawyers = () => {
               </p>
             </div>
             
-            {/* Search and Filter Section */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-10">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
@@ -238,7 +228,6 @@ const Lawyers = () => {
               </div>
             </div>
             
-            {/* Lawyers Grid */}
             {filteredLawyers.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredLawyers.map((lawyer) => (
@@ -328,7 +317,6 @@ const Lawyers = () => {
         </section>
       </main>
       
-      {/* Appointment Booking Dialog */}
       {selectedLawyer && (
         <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
           <DialogContent className="sm:max-w-md">

@@ -1,3 +1,4 @@
+
 import { toast } from 'sonner';
 
 export interface Lawyer {
@@ -14,6 +15,18 @@ export interface Lawyer {
   availability: string[];
   isRegistered?: boolean;
   email?: string;
+}
+
+export interface LawyerRegistration {
+  name: string;
+  email: string;
+  specialization: string;
+  experience: string;
+  location: string;
+  languages: string[];
+  description: string;
+  availability: string[];
+  barNumber?: string;
 }
 
 export interface Appointment {
@@ -121,6 +134,9 @@ const LAWYERS: Lawyer[] = [
   }
 ];
 
+// Store registered lawyer applications in memory (would be in a database in a real application)
+let PENDING_LAWYER_APPLICATIONS: LawyerRegistration[] = [];
+
 // Store appointments in memory (would be in a database in a real application)
 let APPOINTMENTS: Appointment[] = [];
 
@@ -130,6 +146,46 @@ export const getLawyers = (): Lawyer[] => {
 
 export const getLawyer = (id: number): Lawyer | undefined => {
   return LAWYERS.find(lawyer => lawyer.id === id);
+};
+
+export const registerLawyer = (lawyerData: LawyerRegistration): boolean => {
+  try {
+    // Check if email already exists
+    const existingLawyer = LAWYERS.find(lawyer => lawyer.email === lawyerData.email);
+    if (existingLawyer) {
+      toast.error("A lawyer with this email already exists");
+      return false;
+    }
+    
+    // Add to pending applications (in a real app, this would be verified by admin)
+    PENDING_LAWYER_APPLICATIONS.push(lawyerData);
+    
+    // In a real application, this would go through approval process
+    // For demo purposes, we'll auto-approve and add to the lawyers list
+    const newLawyer: Lawyer = {
+      id: LAWYERS.length + 1,
+      name: lawyerData.name,
+      photo: "/placeholder.svg", // Default placeholder
+      specialization: lawyerData.specialization,
+      experience: lawyerData.experience,
+      location: lawyerData.location,
+      languages: lawyerData.languages,
+      rating: 4.5, // Default starting rating
+      reviews: 0,
+      description: lawyerData.description,
+      availability: lawyerData.availability,
+      isRegistered: true,
+      email: lawyerData.email
+    };
+    
+    LAWYERS.push(newLawyer);
+    toast.success("Lawyer profile created successfully! Your profile is now visible to potential clients.");
+    return true;
+  } catch (error) {
+    console.error("Error registering lawyer:", error);
+    toast.error("Failed to register lawyer account");
+    return false;
+  }
 };
 
 export const bookAppointment = (
@@ -191,4 +247,15 @@ export const updateAppointmentStatus = (appointmentId: string, status: 'pending'
   APPOINTMENTS[index].status = status;
   toast.success(`Appointment status updated to ${status}`);
   return true;
+};
+
+// Check if a user can register as a lawyer (would typically involve verification)
+export const canRegisterAsLawyer = (email: string): boolean => {
+  // Check if email is already registered as a lawyer
+  return !LAWYERS.some(lawyer => lawyer.email === email);
+};
+
+// Get pending lawyer applications
+export const getPendingLawyerApplications = (): LawyerRegistration[] => {
+  return PENDING_LAWYER_APPLICATIONS;
 };

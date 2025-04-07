@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import BackButton from '@/components/layout/BackButton';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -161,6 +162,8 @@ const Documents = () => {
                 transition={{ duration: 0.5 }}
                 className="mb-8"
               >
+                <BackButton />
+                
                 <h1 className="text-3xl md:text-4xl font-serif font-bold text-justice-900 mb-4">
                   Legal Document <span className="text-justice-600">Templates</span>
                 </h1>

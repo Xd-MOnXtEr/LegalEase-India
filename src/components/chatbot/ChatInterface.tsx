@@ -59,6 +59,27 @@ const legalKnowledgeBase = {
   
   "habeas corpus": "Habeas Corpus is a constitutional remedy under Article 32 and 226 of the Indian Constitution. It's a writ directing a person detaining another to produce the detainee before the court to examine the legality of detention. It safeguards personal liberty against unlawful detention by both state and private individuals.",
   "pil": "Public Interest Litigation (PIL) in India allows any public-spirited person to approach the Supreme Court (Article 32) or High Courts (Article 226) for protection of public interest. PILs address issues affecting public at large, particularly marginalized sections. The court can take suo moto cognizance and has relaxed traditional locus standi requirements for PILs.",
+  
+  "hello": "Hello! I'm your AI legal assistant. How can I help you with legal information today?",
+  "hi": "Hi there! How can I assist you with legal matters today?",
+  "how are you": "I'm functioning well, thank you! I'm here to provide legal information based on Indian law. What can I help you with?",
+  "thank you": "You're welcome! If you have more legal questions in the future, feel free to ask.",
+  "thanks": "You're welcome! Happy to help with any more legal questions.",
+  "bye": "Goodbye! If you have more legal questions later, feel free to return.",
+  
+  "new laws": "Some notable recent Indian laws include: The Digital Personal Data Protection Act, 2023; The Bharatiya Nyaya Sanhita, 2023 (replacing IPC); The Bharatiya Nagarik Suraksha Sanhita, 2023 (replacing CrPC); The Bharatiya Sakshya Adhiniyam, 2023 (replacing Indian Evidence Act); and The Telecommunications Act, 2023.",
+  
+  "data protection act": "The Digital Personal Data Protection Act, 2023 was enacted on August 11, 2023. It establishes a framework for processing digital personal data, protecting individuals' privacy while enabling lawful data processing. Key features include: consent-based data processing, purpose limitation, data minimization, accuracy requirements, storage limitation, and security measures. It also establishes a Data Protection Board of India.",
+  
+  "criminal law reform": "In 2023, India overhauled its criminal justice system by replacing colonial-era laws with three new codes: 1) Bharatiya Nyaya Sanhita (replacing IPC) - introduces community service as punishment, defines terrorism, and includes new provisions for mob lynching; 2) Bharatiya Nagarik Suraksha Sanhita (replacing CrPC) - mandates electronic FIRs and introduces zero FIR concept; 3) Bharatiya Sakshya Adhiniyam (replacing Indian Evidence Act) - modernizes evidence collection including electronic and digital evidence.",
+  
+  "telecommunications act": "The Telecommunications Act, 2023 replaces the 138-year-old Indian Telegraph Act. It simplifies licensing, recognizes spectrum as a valuable resource, creates a non-auction pathway for satellite broadband, establishes a Digital Bharat Nidhi (fund for rural connectivity), includes right of way provisions, and enhances user protection with stringent KYC requirements.",
+  
+  "mediation act": "The Mediation Act, 2023 promotes mediation as an alternative dispute resolution mechanism. It mandates pre-litigation mediation in certain cases, establishes the Mediation Council of India as a regulatory body, provides for enforcement of mediated settlement agreements, and includes online mediation provisions.",
+  
+  "insolvency bankruptcy code amendment": "The Insolvency and Bankruptcy Code (Amendment) Act, 2023 improves the insolvency resolution framework by allowing admission or withdrawal of insolvency applications with approval from 90% of creditors, streamlining the Corporate Insolvency Resolution Process, and addressing delays in admission of applications.",
+  
+  "waqf amendment bill": "The Waqf (Amendment) Bill, 2024 proposes significant changes to the Waqf Act, 1995, including renaming the 'Waqf Board' to 'Bharat Waqf Board', establishing a Central Waqf Council with broader representation, and requiring documentary evidence for property registration as waqf property. The bill is currently under parliamentary consideration."
 };
 
 interface ChatMessage {
@@ -88,7 +109,7 @@ const ChatInterface = () => {
     setIsLoading(true);
     
     try {
-      // Process the query with Gemini API
+      // Process the query with our knowledge base and Gemini API
       const response = await generateResponse(input, legalKnowledgeBase);
       const botMessage = { content: response, sender: 'bot' as const };
       setMessages(prev => [...prev, botMessage]);

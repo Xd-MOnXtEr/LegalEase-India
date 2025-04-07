@@ -14,7 +14,19 @@ const generateResponse = async (query: string, knowledgeBase: Record<string, str
     // First check if we have a direct match in the knowledge base
     const lowerCaseQuery = query.toLowerCase();
     
-    // Look for direct keyword matches
+    // Check for casual greetings and simple queries first
+    const casualPhrases = ["hello", "hi", "how are you", "thank you", "thanks", "bye"];
+    for (const phrase of casualPhrases) {
+      if (lowerCaseQuery.includes(phrase)) {
+        const response = knowledgeBase[phrase];
+        if (response) {
+          console.log(`Casual phrase match found for: ${phrase}`);
+          return response;
+        }
+      }
+    }
+    
+    // Look for direct keyword matches in knowledge base
     for (const [key, value] of Object.entries(knowledgeBase)) {
       if (lowerCaseQuery.includes(key.toLowerCase())) {
         console.log(`Direct match found for: ${key}`);
@@ -76,7 +88,7 @@ const generateResponse = async (query: string, knowledgeBase: Record<string, str
       return bestMatch;
     }
     
-    return "I'm sorry, I don't have information on that topic. Please ask about specific areas of Indian law.";
+    return "I'm sorry, I don't have specific information on that topic. For legal advice tailored to your situation, please consider consulting with a qualified lawyer. You can find pro-bono lawyers on our Lawyers page.";
   }
 };
 
