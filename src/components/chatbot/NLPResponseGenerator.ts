@@ -1,5 +1,4 @@
-
-import { generateLegalResponse } from '@/utils/geminiApi';
+import { generateLegalResponse, isCasualConversation } from '@/utils/geminiApi';
 import legalKnowledgeBase from './LegalKnowledgeBase';
 
 /**
@@ -12,6 +11,13 @@ import legalKnowledgeBase from './LegalKnowledgeBase';
  */
 const generateResponse = async (query: string, knowledgeBase: Record<string, string> = legalKnowledgeBase) => {
   try {
+    // Check if this is likely a casual conversation
+    const casual = isCasualConversation(query);
+    if (casual) {
+      console.log("Detected casual conversation");
+      return await generateLegalResponse(query, true);
+    }
+
     // First check if we have a direct match in the knowledge base
     const lowerCaseQuery = query.toLowerCase().trim();
     
@@ -112,7 +118,7 @@ const generateResponse = async (query: string, knowledgeBase: Record<string, str
     
     // If no good match in the knowledge base, use the Gemini API
     console.log("No match in knowledge base, using Gemini API");
-    const response = await generateLegalResponse(query);
+    const response = await generateLegalResponse(query, false);
     return response;
     
   } catch (error) {
@@ -158,7 +164,7 @@ const generateResponse = async (query: string, knowledgeBase: Record<string, str
     }
     
     // Handle casual conversational queries with generic responses
-    if (isConversationalQuery(query)) {
+    if (isCasualConversation(query)) {
       return generateConversationalResponse(query);
     }
     
@@ -277,4 +283,3 @@ function findBestSemanticMatch(query: string, knowledgeBase: Record<string, stri
 }
 
 export default generateResponse;
-
