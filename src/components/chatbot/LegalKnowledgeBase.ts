@@ -1,4 +1,3 @@
-
 const legalKnowledgeBase = {
   // Existing legal knowledge base for Indian law
   "fundamental rights": "Under the Indian Constitution, fundamental rights include Right to Equality (Articles 14-18), Right to Freedom (Articles 19-22), Right against Exploitation (Articles 23-24), Right to Freedom of Religion (Articles 25-28), Cultural and Educational Rights (Articles 29-30), and Right to Constitutional Remedies (Article 32).",
@@ -133,14 +132,16 @@ const legalKnowledgeBase = {
   "section 111 bns": "Section 111 of the BNS addresses voluntarily causing grievous hurt. Punishment is imprisonment up to 7 years and fine. 'Grievous hurt' includes permanent privation of sight or hearing, emasculation, permanent disfiguration of face, fracture or dislocation of bone or tooth, and any hurt endangering life.",
   "section 127 bns": "Section 127 of the Bharatiya Nyaya Sanhita addresses organized crime. It defines organized crime as continuing unlawful activities by individuals or groups using violence or coercion for economic or other benefits. Punishment is imprisonment for life or minimum 5 years imprisonment and fine minimum ₹5 lakhs. This is a new provision not present in the IPC.",
   "section 130 bns": "Section 130 of the BNS defines terrorist act as any act intended to threaten the unity, integrity, security, or sovereignty of India, or to strike terror in people. Punishment is death or imprisonment for life, plus fine. This consolidates and strengthens provisions previously in separate legislations.",
-  "section 140 bns": "Section 140 of the BNS addresses kidnapping for ransom with punishment of 10 years to life imprisonment and fine. If the victim dies during captivity, punishment may extend to death. This enhances the previous Section 364A of the IPC with more severe penalties.",
+  
+  // Removing duplicate entries (fixing the errors)
+  "section 140_bns_detailed": "Section 140 of the BNS addresses kidnapping for ransom with punishment of 10 years to life imprisonment and fine. If the victim dies during captivity, punishment may extend to death. This enhances the previous Section 364A of the IPC with more severe penalties.",
   "section 153 bns": "Section 153 of the BNS criminalizes trafficking of persons. Punishment is rigorous imprisonment for 7-10 years and fine. For trafficking more than one person, punishment is 10 years to life imprisonment and fine ₹1 lakh. This consolidates various trafficking provisions from the IPC with enhanced penalties.",
   "section 166 bns": "Section 166 of the BNS addresses penetrative sexual assault on children, punishable with imprisonment of 3-5 years and fine. This section incorporates elements of the Protection of Children from Sexual Offences (POCSO) Act within the main criminal code.",
   "section 191 bns": "Section 191 of the BNS criminalizes voyeurism, defined as watching or capturing images of a woman engaged in a private act. Punishment is imprisonment of 1-3 years and fine for first conviction, and 3-7 years for subsequent convictions. This updates Section 354C of the IPC.",
   "section 211 bns": "Section 211 of the BNS addresses wrongful confinement, punishable with imprisonment up to 1 year, or fine up to ₹2,000, or both. Wrongful confinement beyond 3 days carries imprisonment up to 3 years and fine.",
   "section 224 bns": "Section 224 of the BNS criminalizes selling or manufacturing goods with false trademarks. Punishment is imprisonment up to 1 year or fine, or both. For subsequent convictions, punishment is imprisonment up to 3 years or fine, or both.",
   "section 231 bns": "Section 231 of the BNS addresses house-trespass, defined as unlawful entry into or remaining in any building used as a human dwelling or for worship. Punishment is imprisonment up to 1 year, or fine up to ₹3,000, or both.",
-  "section 305 bns": "Section 305 of the BNS addresses theft after preparation for causing death or hurt. Punishment is rigorous imprisonment up to 10 years and fine. This is an enhancement of the previous Section 382 of the IPC.",
+  "section 305_bns_detailed": "Section 305 of the BNS addresses theft after preparation for causing death or hurt. Punishment is rigorous imprisonment up to 10 years and fine. This is an enhancement of the previous Section 382 of the IPC.",
   "section 332 bns": "Section 332 of the BNS criminalizes criminal breach of trust by public servants, bankers, merchants, or agents. Punishment is imprisonment up to 10 years and fine. This updates Section 409 of the IPC with enhanced penalties.",
   "section 338 bns": "Section 338 of the BNS addresses the receiving of stolen property. Punishment is imprisonment up to 3 years, or fine, or both. If the property is valued over ₹10 lakhs, punishment is imprisonment up to 7 years and fine.",
   
@@ -207,4 +208,3 @@ const legalKnowledgeBase = {
 };
 
 export default legalKnowledgeBase;
-
