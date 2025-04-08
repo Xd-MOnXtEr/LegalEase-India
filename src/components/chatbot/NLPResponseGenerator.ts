@@ -13,7 +13,7 @@ import legalKnowledgeBase from './LegalKnowledgeBase';
 const generateResponse = async (query: string, knowledgeBase: Record<string, string> = legalKnowledgeBase) => {
   try {
     // First check if we have a direct match in the knowledge base
-    const lowerCaseQuery = query.toLowerCase();
+    const lowerCaseQuery = query.toLowerCase().trim();
     
     // Check for casual greetings and simple queries first
     const casualPhrases = ["hello", "hi", "how are you", "thank you", "thanks", "bye"];
@@ -27,24 +27,48 @@ const generateResponse = async (query: string, knowledgeBase: Record<string, str
       }
     }
     
-    // Check for exact keyword matches first (for more accurate responses)
-    for (const [key, value] of Object.entries(knowledgeBase)) {
-      if (lowerCaseQuery === key.toLowerCase()) {
-        console.log(`Exact match found for: ${key}`);
-        return value;
+    // Check for exact matches with known legal terms
+    if (knowledgeBase[lowerCaseQuery]) {
+      console.log(`Exact match found for: ${lowerCaseQuery}`);
+      return knowledgeBase[lowerCaseQuery];
+    }
+
+    // Check for BNS section queries with different formats (e.g., "bns 103", "section 103 bns", "s. 103 bns")
+    const bnsSectionMatch = lowerCaseQuery.match(/(?:bns|section|s\.?)\s*(\d+)(?:\s*bns)?/i);
+    if (bnsSectionMatch) {
+      const sectionNumber = bnsSectionMatch[1];
+      const sectionKey = `section ${sectionNumber} bns`;
+      if (knowledgeBase[sectionKey]) {
+        console.log(`BNS section match found for: ${sectionKey}`);
+        return knowledgeBase[sectionKey];
       }
     }
     
-    // Look for direct keyword matches in knowledge base
+    // Check for direct keyword matches in knowledge base
     for (const [key, value] of Object.entries(knowledgeBase)) {
       if (lowerCaseQuery.includes(key.toLowerCase())) {
         console.log(`Direct match found for: ${key}`);
         return value;
       }
     }
+
+    // Look for crime or legal concept keywords as standalone terms
+    const queryWords = lowerCaseQuery.split(/\s+/);
+    const legalTerms = [
+      "murder", "rape", "theft", "assault", "kidnapping", "extortion", "fraud", 
+      "cheating", "defamation", "terrorism", "trafficking", "stalking", "dowry",
+      "sedition", "domestic violence", "cybercrime", "forgery", "robbery"
+    ];
+
+    for (const word of queryWords) {
+      if (legalTerms.includes(word) && knowledgeBase[word]) {
+        console.log(`Legal term match found for: ${word}`);
+        return knowledgeBase[word];
+      }
+    }
     
     // Look for partial matches by checking if query words are in keywords
-    const queryWords = new Set(lowerCaseQuery.split(/\s+/).filter(word => word.length > 2));
+    const significantQueryWords = new Set(lowerCaseQuery.split(/\s+/).filter(word => word.length > 2));
     let bestPartialMatch = null;
     let bestPartialScore = 0;
 
@@ -52,11 +76,11 @@ const generateResponse = async (query: string, knowledgeBase: Record<string, str
       const keyWords = key.toLowerCase().split(/\s+/);
       let matchScore = 0;
       
-      for (const word of queryWords) {
+      for (const word of significantQueryWords) {
         for (const keyWord of keyWords) {
           // Check for word inclusion
           if (keyWord.includes(word) || word.includes(keyWord)) {
-            matchScore += (keyWord === word) ? 1 : 0.5;
+            matchScore += (keyWord === word) ? 1.5 : 0.5;
           }
         }
       }
@@ -67,7 +91,7 @@ const generateResponse = async (query: string, knowledgeBase: Record<string, str
       }
     }
     
-    if (bestPartialMatch && bestPartialScore > 1) {
+    if (bestPartialMatch && bestPartialScore > 1.5) {
       console.log(`Partial match found with score: ${bestPartialScore}`);
       return bestPartialMatch;
     }
@@ -253,3 +277,4 @@ function findBestSemanticMatch(query: string, knowledgeBase: Record<string, stri
 }
 
 export default generateResponse;
+
