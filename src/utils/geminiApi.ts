@@ -26,15 +26,18 @@ interface GeminiResponse {
  */
 export const generateLegalResponse = async (query: string): Promise<string> => {
   try {
-    // Create a specialized prompt for Indian legal context
+    // Create a specialized prompt for Indian legal context with focus on new laws
     const prompt = `
     You are a knowledgeable legal assistant specializing in Indian law. Provide accurate, helpful, and concise information based on the following query. 
     
     - Focus specifically on Indian legal context and statutes
+    - Include information about new laws like the Bharatiya Nyaya Sanhita, Bharatiya Nagarik Suraksha Sanhita, and Bharatiya Sakshya Adhiniyam when relevant
+    - If discussing recent legal reforms, explain how they differ from previous laws
     - If you're unsure about a specific detail, acknowledge the limitation
     - Provide clear, practical information when possible
-    - Keep responses focused and under 150 words
+    - Keep responses focused and under 200 words
     - Don't fabricate legal provisions
+    - Be conversational and friendly while maintaining accuracy
     
     Query: ${query}
     `;
@@ -111,7 +114,14 @@ export const generateLegalResponse = async (query: string): Promise<string> => {
       throw new Error("Invalid response structure");
     }
 
-    return candidate.content.parts[0].text.trim();
+    let responseText = candidate.content.parts[0].text.trim();
+    
+    // Format response for better readability
+    responseText = responseText
+      .replace(/\n\n/g, '\n')  // Remove excessive newlines
+      .replace(/\*\*(.*?)\*\*/g, '$1');  // Remove markdown bold syntax
+
+    return responseText;
     
   } catch (error) {
     console.error("Error with Gemini API:", error);
